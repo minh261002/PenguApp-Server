@@ -25,7 +25,7 @@ const Login = async (req: Request, res: Response): Promise<any> => {
     const isPasswordValid = compareSync(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(HttpStatus.UNAUTHORIZED).json({ message: Messages.LOGIN_FAILED });
+      return res.status(HttpStatus.FORBIDDEN).json({ message: Messages.LOGIN_FAILED });
     }
 
     const payload = { id: user.id, role: user.role };
@@ -42,7 +42,7 @@ const Login = async (req: Request, res: Response): Promise<any> => {
 
 const RefreshToken = async (req: Request, res: Response): Promise<any> => {
   try{
-    const { refreshToken } = req.body;
+    const refreshToken = req.body.refreshToken;
     // console.log(refreshToken);
     if (!refreshToken) {
       return res.status(HttpStatus.BAD_REQUEST).json({status:HttpStatus.BAD_REQUEST, message: Messages.REFRESH_TOKEN_REQUIRED });
