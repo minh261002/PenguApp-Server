@@ -8,7 +8,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
   const token = req.headers['authorization']?.split(' ')[1]; 
 
   if (!token) {
-    return res.status(HttpStatus.UNAUTHORIZED).json({ message: Messages.TOKEN_REQUIRED });
+    return res.status(HttpStatus.UNAUTHORIZED).json({ message: Messages.AUTHENTICATION_REQUIRED });
   }
 
   const jwtSecret = process.env.JWT_SECRET;

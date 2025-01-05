@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import slugify from "slugify";
+import { Messages } from "~/constants/message";
 
 export interface PostCatalogue extends Document {
   name: string;
@@ -30,15 +30,6 @@ const postCatalogueSchema: Schema = new Schema(
     versionKey: false,  
   }
 );
-
-postCatalogueSchema.pre('save', function (next) {
-  const doc = this as unknown as PostCatalogue;
-  if (doc.isModified('name') || doc.isNew) {
-    doc.slug = slugify(doc.name, { lower: true, strict: true }); 
-  }
-  next();
-});
-
 
 const PostCatalogueModel = mongoose.model<PostCatalogue>("PostCatalogue", postCatalogueSchema);
 export default PostCatalogueModel;
