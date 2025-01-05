@@ -6,19 +6,21 @@ import { Messages } from "~/constants/message";
 const getAllUsers = async (req: Request, res: Response): Promise<any> => {
   try {
     const { page, limit } = req.query;
-    let users; 
 
-    if (!page || !limit) {
-      users = await User.find();
-    } else {
-      users = await User.find().skip(+page * +limit).limit(+limit);
-    }
+    const pageNumber = page ? parseInt(page as string) : 1;
+    const limitNumber = limit ? parseInt(limit as string) : 10;
 
+    const users = await User.find()
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
+
+    
     return res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
       message: Messages.SUCCESS,
       data: users,
     });
+    
     } catch (err) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
