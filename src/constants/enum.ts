@@ -9,4 +9,9 @@ const UserRole = {
   USER: 'user',
 }
 
-export { UserStatus, UserRole };
+const ActiveStatus = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+}
+
+export { UserStatus, UserRole,  ActiveStatus };

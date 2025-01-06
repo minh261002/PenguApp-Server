@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { Messages } from "~/constants/message";
+import { ActiveStatus } from "~/constants/enum";
 
 export interface PostCatalogue extends Document {
   name: string;
@@ -9,16 +9,23 @@ export interface PostCatalogue extends Document {
   show_menu: boolean;
   show_home: boolean;
   parent: mongoose.Types.ObjectId | null;  
+  status: string;
 }
 
 const postCatalogueSchema: Schema = new Schema(
   {
     name: { type: String, required: true }, 
     slug: { type: String, required: true, unique: true }, 
-    image: { type: String },  
+    image: { type: String, default: null },  
     description: { type: String, default: null },  
     show_menu: { type: Boolean, default: false },
     show_home: { type: Boolean, default: false },
+    status: {
+      type: String,
+      required: true,
+      enum: Object.values(ActiveStatus),
+      default: ActiveStatus.ACTIVE,
+    },
     parent: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'PostCatalogue', 
