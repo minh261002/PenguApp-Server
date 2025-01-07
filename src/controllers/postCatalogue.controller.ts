@@ -151,8 +151,10 @@ const deletePostCatalogue = async (req: Request, res: Response): Promise<any> =>
       });
     }
 
-    //xoá tất cả các bài viết thuộc danh mục này và danh mục con và các bài viết của danh mục con
-    // delete all posts belong to this category and its children categories
+    //xoá các danh mục con của danh mục này
+    await PostCatalogue.deleteMany({
+      parent: id,
+    });
 
     await postCatalogue.deleteOne();
 
