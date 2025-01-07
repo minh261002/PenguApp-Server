@@ -3,6 +3,7 @@ import { ActiveStatus } from "~/constants/enum";
 
 export interface SliderItem extends Document {
   title: string;
+  slider_id: typeof Schema.Types.ObjectId;
   href: string;
   position: number;
   image: string;
@@ -12,6 +13,7 @@ export interface SliderItem extends Document {
 const sliderItemSchema: Schema = new Schema(
   {
     title: { type: String, required: true }, 
+    slider_id: { type: Schema.Types.ObjectId, required: true },
     href: { type: String, required: false },
     position: { type: Number, required: true, default: 0 },
     image: { type: String, required: true },
