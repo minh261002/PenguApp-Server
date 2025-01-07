@@ -12,6 +12,7 @@ export interface User extends Document {
   ward_id: string | null;
   address: string | null;
   avatar: string | null;
+  birthday: Date | null;
   reward_point: number;
   refresh_token: string | null;
   role: keyof typeof UserRole;
@@ -66,6 +67,11 @@ var userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    required: false,
+    default: null,
+  },
+  birthday: {
+    type: Date,
     required: false,
     default: null,
   },

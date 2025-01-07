@@ -51,6 +51,25 @@ const getUserById = async (req: Request, res: Response): Promise<any> => {
   }
 }
 
+const createUser = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { name, email, phone, province_id, district_id, ward_id, address, status, role, avatar, birthday } = req.body;
+    const user = new User({ name, email, phone, province_id, district_id, ward_id, address, status, role, avatar, birthday });
+    await user.save();
+
+    return res.status(HttpStatus.OK).json({
+      status: HttpStatus.OK,
+      message: Messages.SUCCESS,
+      data: user,
+    });
+
+  } catch (err) {
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: Messages.SERVER_ERROR });
+  }
+}
+
 const updateUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
@@ -63,7 +82,7 @@ const updateUser = async (req: Request, res: Response): Promise<any> => {
         .json({ status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    const { name, email, phone, province_id, district_id, ward_id, address, status, role, avatar } = req.body;
+    const { name, email, phone, province_id, district_id, ward_id, address, status, role, avatar , birthday} = req.body;
 
     if (name) user.name = name;
     if (email) user.email = email;
@@ -75,6 +94,7 @@ const updateUser = async (req: Request, res: Response): Promise<any> => {
     if (status) user.status = status;
     if (role) user.role = role;
     if (avatar) user.avatar = avatar;
+    if (birthday) user.birthday = birthday;
 
     const updatedUser = await user.save();
 
@@ -119,6 +139,7 @@ const deleteUser = async (req: Request, res: Response): Promise<any> => {
 export {
   getAllUsers,
   getUserById,
+  createUser,
   updateUser,
   deleteUser,
 };
