@@ -99,7 +99,6 @@ const Me = async (req: Request, res: Response): Promise<any> => {
     }
 
     const user = await User.findById(req.user.id);
-  console.log(user);    
     if (!user) {
       return res.status(HttpStatus.NOT_FOUND).json({ message: Messages.ACCOUNT_NOT_FOUND });
     }
