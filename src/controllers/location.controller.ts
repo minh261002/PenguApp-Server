@@ -23,8 +23,7 @@ const getPronvinces = async (req: Request, res: Response): Promise<any> => {
 const getDistrictsByProvinceId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { provinceCode } = req.params;
-    const districts = await District.find
-      ({ parent_code: provinceCode });
+    const districts = await District.find({ parent_code: provinceCode });
     return res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
       message: Messages.SUCCESS,

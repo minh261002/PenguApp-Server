@@ -43,19 +43,19 @@ var userSchema = new mongoose.Schema({
     required: true,
   },
   province_id: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Province',
     required: false,
     default: null,
   },
   district_id: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'District',
     required: false,
     default: null,
   },
   ward_id: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Ward',
     required: false,
     default: null,
