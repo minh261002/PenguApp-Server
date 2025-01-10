@@ -6,14 +6,8 @@ import {  hashSync } from "bcrypt";
 
 const getAllUsers = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { page, limit } = req.query;
-
-    const pageNumber = page ? parseInt(page as string) : 1;
-    const limitNumber = limit ? parseInt(limit as string) : 10;
-
     const users = await User.find()
-      .skip((pageNumber - 1) * limitNumber)
-      .limit(limitNumber);
+      .sort({ created_at: -1 });
 
     
     return res.status(HttpStatus.OK).json({
@@ -138,6 +132,35 @@ const updateUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+const updateStatus = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { id } = req.params;
+
+    const user = await
+    User.findById(id);
+
+    if (!user) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
+    }
+
+    const { status } = req.body;
+    if (status) user.status = status;
+    const updatedUser = await user.save();
+
+    return res.status(HttpStatus.OK).json({
+      status: HttpStatus.OK,
+      message: Messages.SUCCESS,
+      data: updatedUser,
+    });
+  } catch (err) {
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ message: Messages.SERVER_ERROR });
+  }
+}
+
 const deleteUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
@@ -168,4 +191,5 @@ export {
   createUser,
   updateUser,
   deleteUser,
+  updateStatus,
 };
