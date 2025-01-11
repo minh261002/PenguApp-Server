@@ -58,7 +58,7 @@ const createUser = async (req: Request, res: Response): Promise<any> => {
     let avatar;
     if(req.file){
       const fileName = req.file.filename;
-      const filePath = process.env.APP_URL + '/public/uploads/' + fileName;
+      const filePath = process.env.APP_URL + '/uploads/' + fileName;
       avatar = filePath;
     }else{
       avatar = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';

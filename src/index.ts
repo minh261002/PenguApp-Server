@@ -11,13 +11,14 @@ const app = express();
 
 app.use(cors({
     origin: process.env.CLIENT_URL,
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }));
   
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
-app.use('/public', express.static('public'));
+
+app.use('/uploads', express.static('public/uploads'));
 
 connection();
 
