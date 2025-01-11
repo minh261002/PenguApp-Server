@@ -7,8 +7,8 @@ import {  hashSync } from "bcrypt";
 const getAllUsers = async (req: Request, res: Response): Promise<any> => {
   try {
     const users = await User.find()
-      .sort({ created_at: -1 });
-
+      .where('_id').ne(req.user.id)
+      .sort({ createdAt: -1 });
     
     return res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
@@ -47,11 +47,23 @@ const getUserById = async (req: Request, res: Response): Promise<any> => {
 }
 
 const createUser = async (req: Request, res: Response): Promise<any> => {
+
   try {
-    const { name, email, password, phone, province_id, district_id, ward_id, address, status, role, avatar, birthday } = req.body;
+    const { name, email, password, phone, province_id, district_id, ward_id, address, status, role, birthday } = req.body;
+    
     if(!name || !email || !password){
       return res.status(HttpStatus.BAD_REQUEST).json({status: HttpStatus.BAD_REQUEST, message: Messages.REQUIRED_FIELDS_MISSING});
     }
+
+    let avatar;
+    if(req.file){
+      const fileName = req.file.filename;
+      const filePath = process.env.APP_URL + '/public/uploads/' + fileName;
+      avatar = filePath;
+    }else{
+      avatar = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+    }
+
 
     const existsUser = await User.findOne({ email });
     if(existsUser){
