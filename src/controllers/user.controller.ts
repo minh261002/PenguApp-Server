@@ -105,16 +105,22 @@ const createUser = async (req: Request, res: Response): Promise<any> => {
 const updateUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
-
     const user = await User.findById(id);
-
     if (!user) {
       return res
         .status(HttpStatus.NOT_FOUND)
         .json({ status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    const { name, email, phone, province_id, district_id, ward_id, address, status, role, avatar , birthday} = req.body;
+    const { name, email, phone, province_id, district_id, ward_id, address, status, role , birthday} = req.body;
+
+    let avatar;
+    if(req.file){
+      const fileName = req.file.filename;
+      const filePath = process.env.APP_URL + '/uploads/' + fileName;
+      avatar = filePath;
+    }
+
 
     if (name) user.name = name;
     if (email) user.email = email;
