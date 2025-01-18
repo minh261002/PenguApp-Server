@@ -92,7 +92,7 @@ const createPostCatalogue = async (req: Request, res: Response): Promise<any> =>
 const updatePostCatalogue = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
-    const { name, description, parent, show_home, show_menu } = req.body;
+    const { name, description, show_home, show_menu, status } = req.body;
 
     const postCatalogue = await PostCatalogue.findById(id);
 
@@ -108,7 +108,8 @@ const updatePostCatalogue = async (req: Request, res: Response): Promise<any> =>
     if(description) postCatalogue.description = description;
     if(show_home) postCatalogue.show_home = show_home;
     if(show_menu) postCatalogue.show_menu = show_menu;
-
+    if(status) postCatalogue.status = status;
+    
     const newPostCatalogue = await postCatalogue.save();
 
     return res.status(HttpStatus.OK).json({

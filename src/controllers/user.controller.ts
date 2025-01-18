@@ -141,8 +141,7 @@ const updateStatus = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
 
-    const user = await
-    User.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res
