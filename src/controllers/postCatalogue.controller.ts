@@ -6,20 +6,12 @@ import { buildTree,createSlug } from "~/utils/helpers";
 
 const getAllPostCatalogues = async (req: Request, res: Response): Promise<any> => {
   try {
-    const rootCategories = await PostCatalogue.find({ parent: null });
-
-    const catalogueTree = await Promise.all(rootCategories.map(async (rootCategory) => {
-      const children = await buildTree(PostCatalogue, rootCategory._id as string);
-      return {
-        ...rootCategory.toObject(),
-        children,
-      };
-    }));
+    const catalogues = await PostCatalogue.find().sort({ createdAt: -1 });
 
     return res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
       message: Messages.SUCCESS,
-      data: catalogueTree,
+      data: catalogues,
     });
   } catch (error) {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -57,7 +49,7 @@ const getPostCatalogueById = async (req: Request, res: Response): Promise<any> =
 
 const createPostCatalogue = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { name, description, parent, show_home, show_menu } = req.body;
+    let { name, image, description, parent, show_home, show_menu } = req.body;
 
     if (!name) {
       return res.status(HttpStatus.BAD_REQUEST).json({
@@ -66,20 +58,17 @@ const createPostCatalogue = async (req: Request, res: Response): Promise<any> =>
       });
     }
 
-    const slug = createSlug(name);
-
-    let image: string | undefined;
-    if (req.file) {
-      const file = req.file as Express.Multer.File;
-      image = file.filename;
+    if(!image){
+      image = 'https://res.cloudinary.com/doy3slx9i/image/upload/v1735367389/Pengu/not-found_y7uha7.jpg';
     }
+
+    const slug = createSlug(name);
 
     const newPostCatalogue = new PostCatalogue({
       name,
       slug,
       image,
       description,
-      parent,
       show_home,
       show_menu,
     });
@@ -103,7 +92,7 @@ const createPostCatalogue = async (req: Request, res: Response): Promise<any> =>
 const updatePostCatalogue = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
-    const { name, description, parent, show_home, show_menu } = req.body;
+    const { name, description, show_home, show_menu, status } = req.body;
 
     const postCatalogue = await PostCatalogue.findById(id);
 
@@ -117,10 +106,10 @@ const updatePostCatalogue = async (req: Request, res: Response): Promise<any> =>
     if(name) postCatalogue.name = name;
     if(name) postCatalogue.slug = createSlug(name);
     if(description) postCatalogue.description = description;
-    if(parent) postCatalogue.parent = parent;
     if(show_home) postCatalogue.show_home = show_home;
     if(show_menu) postCatalogue.show_menu = show_menu;
-
+    if(status) postCatalogue.status = status;
+    
     const newPostCatalogue = await postCatalogue.save();
 
     return res.status(HttpStatus.OK).json({

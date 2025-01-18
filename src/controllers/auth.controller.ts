@@ -34,7 +34,14 @@ const Login = async (req: Request, res: Response): Promise<any> => {
     user.refresh_token = tokens.refreshToken;
     await user.save();
 
-    return res.status(HttpStatus.OK).json({status:HttpStatus.OK, message: Messages.LOGIN_SUCCESS, tokens });
+    const userData = {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      avatar: user.avatar,
+    }
+
+    return res.status(HttpStatus.OK).json({status:HttpStatus.OK, message: Messages.LOGIN_SUCCESS, tokens, userData });
   }catch(err){
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: Messages.SERVER_ERROR});
   }
@@ -43,7 +50,6 @@ const Login = async (req: Request, res: Response): Promise<any> => {
 const RefreshToken = async (req: Request, res: Response): Promise<any> => {
   try{
     const refreshToken = req.body.refreshToken;
-    // console.log(refreshToken);
     if (!refreshToken) {
       return res.status(HttpStatus.BAD_REQUEST).json({status:HttpStatus.BAD_REQUEST, message: Messages.REFRESH_TOKEN_REQUIRED });
     }
@@ -68,7 +74,14 @@ const RefreshToken = async (req: Request, res: Response): Promise<any> => {
     user.refresh_token = newTokens.refreshToken;
     await user.save();
 
-    return res.status(HttpStatus.OK).json({status:HttpStatus.OK,  message: Messages.TOKEN_REFRESHED, tokens: newTokens });
+    const userData = {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      avatar: user.avatar,
+    }
+
+    return res.status(HttpStatus.OK).json({status:HttpStatus.OK,  message: Messages.TOKEN_REFRESHED, tokens: newTokens, userData });
   }catch(err){
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: Messages.SERVER_ERROR});
   }

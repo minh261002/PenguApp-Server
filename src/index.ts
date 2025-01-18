@@ -10,19 +10,19 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true
+    origin: ['http://localhost:3000', 'http://localhost:5174'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }));
   
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
 connection();
 
 const PORT = process.env.PORT || 3000;
 
-app.use('/api', router);
+app.use('/api/v1', router);
 
 app.listen(PORT, () => {
   console.log('Server is running');

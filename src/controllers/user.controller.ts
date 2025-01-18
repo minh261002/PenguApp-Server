@@ -7,8 +7,8 @@ import {  hashSync } from "bcrypt";
 const getAllUsers = async (req: Request, res: Response): Promise<any> => {
   try {
     const users = await User.find()
-      .sort({ created_at: -1 });
-
+      .where('_id').ne(req.user.id)
+      .sort({ createdAt: -1 });
     
     return res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
@@ -47,8 +47,10 @@ const getUserById = async (req: Request, res: Response): Promise<any> => {
 }
 
 const createUser = async (req: Request, res: Response): Promise<any> => {
+
   try {
-    const { name, email, password, phone, province_id, district_id, ward_id, address, status, role, avatar, birthday } = req.body;
+    const { name, email, password, phone, province_id, district_id, ward_id, address, status, avatar, role, birthday } = req.body;
+    console.log(req.body)
     if(!name || !email || !password){
       return res.status(HttpStatus.BAD_REQUEST).json({status: HttpStatus.BAD_REQUEST, message: Messages.REQUIRED_FIELDS_MISSING});
     }
@@ -93,16 +95,19 @@ const createUser = async (req: Request, res: Response): Promise<any> => {
 const updateUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
-
     const user = await User.findById(id);
-
     if (!user) {
       return res
         .status(HttpStatus.NOT_FOUND)
         .json({ status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    const { name, email, phone, province_id, district_id, ward_id, address, status, role, avatar , birthday} = req.body;
+    const { name, email,password, phone, province_id, district_id, ward_id, address, status, role, avatar, birthday} = req.body;
+
+    if(password){
+      const hashedPassword = hashSync(password, 10);
+      user.password = hashedPassword;
+    }
 
     if (name) user.name = name;
     if (email) user.email = email;
@@ -136,8 +141,7 @@ const updateStatus = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
 
-    const user = await
-    User.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res
