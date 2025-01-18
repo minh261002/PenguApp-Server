@@ -8,7 +8,6 @@ export interface PostCatalogue extends Document {
   description: string;
   show_menu: boolean;
   show_home: boolean;
-  parent: mongoose.Types.ObjectId | null;  
   status: string;
 }
 
@@ -25,12 +24,7 @@ const postCatalogueSchema: Schema = new Schema(
       required: true,
       enum: Object.values(ActiveStatus),
       default: ActiveStatus.ACTIVE,
-    },
-    parent: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'PostCatalogue', 
-      default: null 
-    },
+    }
   },
   {
     timestamps: true,  

@@ -10,7 +10,7 @@ const router = express.Router();
 router.use('/auth', authRouter);
 router.use('/user', userRouter);
 router.use('/location', locationRouter);
-router.use('/post/catalogue', postCatalogueRouter);
+router.use('/post-catalogue', postCatalogueRouter);
 router.use('/post', postRouter);
 
 export default router;

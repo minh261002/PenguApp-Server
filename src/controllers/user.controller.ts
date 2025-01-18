@@ -50,7 +50,7 @@ const createUser = async (req: Request, res: Response): Promise<any> => {
 
   try {
     const { name, email, password, phone, province_id, district_id, ward_id, address, status, avatar, role, birthday } = req.body;
-    
+    console.log(req.body)
     if(!name || !email || !password){
       return res.status(HttpStatus.BAD_REQUEST).json({status: HttpStatus.BAD_REQUEST, message: Messages.REQUIRED_FIELDS_MISSING});
     }
@@ -102,7 +102,12 @@ const updateUser = async (req: Request, res: Response): Promise<any> => {
         .json({ status: HttpStatus.NOT_FOUND, message: Messages.NOT_FOUND });
     }
 
-    const { name, email, phone, province_id, district_id, ward_id, address, status, role, avatar, birthday} = req.body;
+    const { name, email,password, phone, province_id, district_id, ward_id, address, status, role, avatar, birthday} = req.body;
+
+    if(password){
+      const hashedPassword = hashSync(password, 10);
+      user.password = hashedPassword;
+    }
 
     if (name) user.name = name;
     if (email) user.email = email;
