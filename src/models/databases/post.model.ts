@@ -8,7 +8,6 @@ export interface Post extends Document {
   image: string;
   content: string;
   is_featured: boolean;
-  parent: mongoose.Types.ObjectId | null;  
   status: string;
 }
 
